@@ -2,7 +2,6 @@
   "name": "pictionary",
   "version": "0.0.1",
   "description": "DWM project using Websocket",
-  "main": "index.js",
   "scripts": {
     "start": "node server.js"
   },
