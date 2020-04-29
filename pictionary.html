@@ -7,11 +7,41 @@
       canvas{
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
       }
+
+      form{
+        position: fixed;
+        top:0;
+        right: 0;
+        border: 1px solid black;
+        padding: 10px;
+      }
+      label{
+        display: block;
+      }
+      .users{
+        position: fixed;
+        bottom: 0;
+        right: 0;
+        padding: 10px;
+        border: 1px solid black;
+      }
     </style>
   </head>
   <body>
     <h1>Hello world</h1>
 
+    <form>
+      <label>
+      Line weight: <input class="js-weight" type="range" min="1" max="50" value="4" />
+    </label>
+    <label>
+      Color: <input class="js-color" type="color" value="#000" />
+    </label>
+    </form>
+
+    <ul class="users js-users">
+
+    </ul>
     <script src="/socket.io/socket.io.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/p5.min.js"></script>
     <script type="text/javascript">
@@ -22,11 +52,17 @@
       socket.emit('username', username);
 
 
+      const inputWeight = document.querySelector('.js-weight');
+      const inputColor = document.querySelector('.js-color');
+      const usersList = document.querySelector('.js-users');
+
       function setup() {
         createCanvas(500, 500);
       }
 
       function mouseDragged() {
+        strokeWeight(inputWeight.value);
+        stroke(inputColor.value);
         line(mouseX, mouseY, pmouseX, pmouseY);
         socket.emit('line', {
           // mouseX: mouseX,
@@ -37,12 +73,25 @@
           mouseX,
           mouseY,
           pmouseX,
-          pmouseY
+          pmouseY,
+          weight: inputWeight.value,
+          color: inputColor.value
         });
       }
 
       socket.on('line', (data) => {
+        stroke(data.color);
+        strokeWeight(data.weight);
         line(data.mouseX, data.mouseY, data.pmouseX, data.pmouseY);
+      });
+
+      socket.on('users', (data) => {
+        usersList.innerHTML = '';
+        data.forEach((user) => {
+          const li = document.createElement('li');
+          li.innerHTML = user;
+          usersList.appendChild(li);
+        });
       });
     </script>
 

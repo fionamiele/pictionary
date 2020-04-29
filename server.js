@@ -19,9 +19,13 @@ io.on('connection', (socket) => {
   onConnection(socket);
 });
 
+let users = [];
 function onConnection (socket) {
   socket.on('username', (username) => {
     console.log('Client name : ', username);
+    socket.username = username;
+    users.push(socket);
+    sendUsers();
   });
 
   // socket est celui qui est connecté (utilisateur qui vient fe la fct onconnection)
@@ -29,4 +33,19 @@ function onConnection (socket) {
   socket.on('line', (data) => {
     socket.broadcast.emit('line', data);
   });
+
+  socket.on('disconnect', () => {
+    users = users.filter((user) => {
+      // ça veut dire = est-ce que le socket n'est pas égal à socket
+      return user !== socket;
+    });
+    sendUsers();
+
+  });
+}
+
+function sendUsers () {
+  io.emit('users', users.map((user) => {
+    return user.username;
+  }))
 }
