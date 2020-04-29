@@ -46,6 +46,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/p5.min.js"></script>
     <script type="text/javascript">
       let socket = io();
+      let isActive = false;
 
       const username = prompt('Tell your name');
 
@@ -61,6 +62,8 @@
       }
 
       function mouseDragged() {
+        // si isactive est = à false on return
+        if (!isActive) return;
         strokeWeight(inputWeight.value);
         stroke(inputColor.value);
         line(mouseX, mouseY, pmouseX, pmouseY);
@@ -89,10 +92,27 @@
         usersList.innerHTML = '';
         data.forEach((user) => {
           const li = document.createElement('li');
-          li.innerHTML = user;
+          if (user.active) {
+            li.innerHTML = `<b>${user.username}</b>`;
+          }else{
+            li.innerHTML = user.username;
+          }
+          li.innerHTML = user.username;
           usersList.appendChild(li);
+
+          // si la pers a le droit de jouer ou non
+          if(user.username === username) {
+            isActive = user.active;
+          }
         });
       });
+      socket.on('clear', () => {
+        clear();
+      });
+
+      socket.on('word', (word) => {
+        alert(`Your word is: ${word}`);
+      })
     </script>
 
   </body>
