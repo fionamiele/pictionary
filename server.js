@@ -33,7 +33,7 @@ function onConnection (socket) {
     if(users.length === 0) {
       currentPlayer = socket;
       timeout = clearTimeout(timeout);
-      // 5000 millisec
+      // 20000 millisec
       users.push(socket);
       switchPlayer();
     }else{
@@ -85,7 +85,7 @@ function switchPlayer () {
 
 
   sendUsers();
-  timeout = setTimeout(switchPlayer, 5000);
+  timeout = setTimeout(switchPlayer, 20000);
 
   // mot aleatoire a recuperer dans le tableau le calcul c pr avoir une valeur ronde et pas 1.9999999...
   currentPlayer.emit('word', words[Math.floor(words.length * Math.random())]);
