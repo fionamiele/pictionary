@@ -1,0 +1,15 @@
+{
+  "name": "pictionary",
+  "version": "0.0.1",
+  "description": "DWM project using Websocket",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "author": "fiona",
+  "license": "ISC",
+  "devDependencies": {
+    "express": "^4.17.1",
+    "socket.io": "^2.3.0"
+  }
+}
